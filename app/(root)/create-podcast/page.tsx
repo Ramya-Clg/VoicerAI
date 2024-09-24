@@ -41,16 +41,19 @@ const formSchema = z.object({
 })
 
 const CreatePodcast = () => {
-    const [imageURL, setImageURL] = useState<string | null>(null)
-    const [imagePrompt, setImagePrompt] = useState<string | null>(null)
-    const [imageStorageID, setImageStorageId] = useState<Id<"_storage"> | null>(null)
-    const [audioURL, setAudioURL] = useState<string | null>(null)
-    const [audioDuration, setAudioDuration] = useState<number | null>(null)
-    const [audioStorageID, setaudioStorageID] = useState<Id<"_storage"> | null>(null)
-    const [voiceType, setVoiceType] = useState<string | null>(null)
-    const [voicePrompt, setVoicePrompt] = useState<string | null>(null)
+    const [imagePrompt, setImagePrompt] = useState('');
+    const [imageStorageId, setImageStorageId] = useState<Id<"_storage"> | null>(null)
+    const [imageUrl, setImageUrl] = useState('');
+
+    const [audioUrl, setAudioUrl] = useState('');
+    const [audioStorageId, setAudioStorageId] = useState<Id<"_storage"> | null>(null)
+    const [audioDuration, setAudioDuration] = useState(0);
+
+    const [voiceType, setVoiceType] = useState<string | null>(null);
+    const [voicePrompt, setVoicePrompt] = useState('');
+
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -75,7 +78,7 @@ const CreatePodcast = () => {
                                 <FormItem className="flex flex-col gap-2.5">
                                     <FormLabel className="text-16 font-bold text-white-1">Title</FormLabel>
                                     <FormControl>
-                                        <Input className="input-class focus-visible: ring-orange-1" placeholder="RS podcast" {...field} />
+                                        <Input className="input-class focus-visible:ring-offset-orange-1" placeholder="RS podcast" {...field} />
                                     </FormControl>
                                     <FormMessage className="text-white-1" />
                                 </FormItem>
@@ -86,7 +89,7 @@ const CreatePodcast = () => {
                             <Select onValueChange={(e) => {
                                 setVoiceType(e)
                             }}>
-                                <SelectTrigger className={cn('text-16 w-full border-none bg-black-1 text-gray-1')}>
+                                <SelectTrigger className={cn('text-16 w-full border-none bg-black-1 text-gray-1 focus-visible:ring-offset-orange-1')}>
                                     <SelectValue placeholder="Select AI voice" className="placeholder:text-gray-1" />
                                 </SelectTrigger>
                                 <SelectContent className="text-16 border-none bg-black-1 font-bold text-white-1 focus:ring-orange-1" >
@@ -108,7 +111,7 @@ const CreatePodcast = () => {
                                 <FormItem className="flex flex-col gap-2.5">
                                     <FormLabel className="text-16 font-bold text-white-1">Description</FormLabel>
                                     <FormControl>
-                                        <Textarea className="input-class focus-visible: ring-orange-1" placeholder="Write a short podcast description" {...field} />
+                                        <Textarea className="input-class focus-visible:ring-offset-orange-1" placeholder="Write a short podcast description" {...field} />
                                     </FormControl>
                                     <FormMessage className="text-white-1" />
                                 </FormItem>
@@ -116,20 +119,33 @@ const CreatePodcast = () => {
                         />
                     </div>
                     <div className="flex flex-col pt-10">
-                            <GeneratePodcast></GeneratePodcast>
-                            <GenerateThumbnail></GenerateThumbnail>
-                            <div className="mt-10 w-full ">
-                                <Button type="submit" className="text-16 w-full bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 hover:bg-black-1">
-                                    {isSubmitting? (
-                                        <>
+                        <GeneratePodcast
+                            setAudioStorageId={setAudioStorageId}
+                            setAudio={setAudioUrl}
+                            voiceType={voiceType!}
+                            audio={audioUrl}
+                            voicePrompt={voicePrompt}
+                            setVoicePrompt={setVoicePrompt}
+                            setAudioDuration={setAudioDuration}
+                        />
+                        <GenerateThumbnail
+                            setImage={setImageUrl}
+                            setImageStorageId={setImageStorageId}
+                            image={imageUrl}
+                            imagePrompt={imagePrompt}
+                            setImagePrompt={setImagePrompt} />
+                        <div className="mt-10 w-full ">
+                            <Button type="submit" className="text-16 w-full bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 hover:bg-black-1">
+                                {isSubmitting ? (
+                                    <>
                                         Submitting
                                         <Loader size={20} className="animate-spin ml-2"></Loader>
-                                        </>
-                                    ): (
-                                        'Submit and publish podcast'
-                                    )}
-                                </Button>
-                            </div>
+                                    </>
+                                ) : (
+                                    'Submit and publish podcast'
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 </form>
             </Form>
