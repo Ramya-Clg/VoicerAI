@@ -51,12 +51,11 @@ export interface ProfilePodcastProps {
 }
 
 export type VoiceType =
-  | "alloy"
-  | "echo"
-  | "fable"
-  | "onyx"
-  | "nova"
-  | "shimmer";
+  | "Linda"
+  | "Amy"
+  | "Mary"
+  | "John"
+  | "Mike";
 
 export interface GeneratePodcastProps {
   voiceType: VoiceType;

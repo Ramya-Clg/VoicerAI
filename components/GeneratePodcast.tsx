@@ -11,6 +11,7 @@ import { generateUploadUrl } from '@/convex/files'
 import { useUploadFiles } from '@xixixao/uploadstuff/react'
 import { set } from 'react-hook-form'
 import { useToast } from "@/hooks/use-toast"
+import axios from 'axios'
 
 
 const useGeneratePodcast = ({
@@ -27,7 +28,13 @@ const useGeneratePodcast = ({
     const generateUploadUrl = useMutation(api.files.generateUploadUrl)
     const { startUpload } = useUploadFiles(generateUploadUrl)
 
-    const getPodcastAudio = useAction(api.openai.generateAudioAction)
+    const getPodcastAudio = async ({ voice, input }: any) => {
+        console.log('Generating podcast audio')
+        const response = await axios.get(`http://api.voicerss.org/?key=3be3ccd270e445de838a1bc3d3326fa9&hl=en-us&c=MP3&v=${voice}&src=${input}
+`, { responseType: 'blob' })
+        return response.data;
+    };
+
     const getAudioUrl = useMutation(api.podcasts.getUrl)
 
     const { toast } = useToast()
@@ -44,11 +51,11 @@ const useGeneratePodcast = ({
         }
 
         try {
-            const response = await getPodcastAudio({
+            const blob = await getPodcastAudio({
                 voice: voiceType,
                 input: voicePrompt
             })
-            const blob = new Blob([response], { type: 'audio/mpeg' });
+            console.log(blob)
             const fileName = `podcast-${uuidv4()}.mp3`;
             const file = new File([blob], fileName, { type: 'audio/mpeg' });
             const uploaded = await startUpload([file]);
