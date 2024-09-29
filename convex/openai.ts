@@ -34,7 +34,6 @@ export const getImageProcessId = action({
             }
         });
         
-        console.log(response2.data);    
         while(response2.data.status != "COMPLETED"){
             response2 = await axios.get(`https://api.monsterapi.ai/v1/status/${processId}`, {
                 headers: {
