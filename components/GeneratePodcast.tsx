@@ -23,17 +23,21 @@ const useGeneratePodcast = ({
     voicePrompt,
     setVoicePrompt
 }: GeneratePodcastProps) => {
-    //logic for podcast generation
     const [isGenerating, setIsGenerating] = useState(false)
     const generateUploadUrl = useMutation(api.files.generateUploadUrl)
     const { startUpload } = useUploadFiles(generateUploadUrl)
 
     const getPodcastAudio = async ({ voice, input }: any) => {
         console.log('Generating podcast audio')
-        const response = await axios.get(`http://api.voicerss.org/?key=${process.env.VOICERSS_API_KEY}&hl=en-us&c=MP3&v=${voice}&src=${input}
-`, { responseType: 'blob' })
+        const key = process.env.NEXT_PUBLIC_VOICERSS_API_KEY
+        console.log(key)
+        const url = `http://api.voicerss.org/?key=${key}&hl=en-us&c=MP3&v=${voice}&src=${input}`
+        console.log(url);
+        const response = await axios.get(url, { responseType: 'blob' })
+        console.log(response.data)
         return response.data;
     };
+
 
     const getAudioUrl = useMutation(api.podcasts.getUrl)
 
@@ -55,7 +59,6 @@ const useGeneratePodcast = ({
                 voice: voiceType,
                 input: voicePrompt
             })
-            console.log(blob)
             const fileName = `podcast-${uuidv4()}.mp3`;
             const file = new File([blob], fileName, { type: 'audio/mpeg' });
             const uploaded = await startUpload([file]);
