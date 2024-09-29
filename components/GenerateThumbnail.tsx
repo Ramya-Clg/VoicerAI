@@ -14,6 +14,7 @@ import { useAction, useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { get } from 'http'
 import { v4 as uuidv4 } from 'uuid'
+import { set } from 'zod'
 
 
 const GenerateThumbnail = ({
@@ -57,6 +58,7 @@ const GenerateThumbnail = ({
     }
     const generateImage = async () => {
         try {
+            setIsImageLoading(true);
             const processUrl = await getImageProcessId({ prompt: imagePrompt });
             const response = await fetch(processUrl)
             const blob = await response.blob();

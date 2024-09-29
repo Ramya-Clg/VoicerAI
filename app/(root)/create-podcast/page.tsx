@@ -32,6 +32,12 @@ import GeneratePodcast from "@/components/GeneratePodcast"
 import GenerateThumbnail from "@/components/GenerateThumbnail"
 import { Loader } from "lucide-react"
 import { Id } from "@/convex/_generated/dataModel"
+import { useToast } from "@/hooks/use-toast"
+import { title } from "process"
+import { useMutation } from "convex/react"
+import { api } from "@/convex/_generated/api"
+import { create } from "domain"
+import { useRouter } from "next/navigation"
 
 const voiceCategories = ['Linda', 'Amy', 'Mary', 'John', 'Mike']
 
@@ -41,6 +47,7 @@ const formSchema = z.object({
 })
 
 const CreatePodcast = () => {
+    const router = useRouter();
     const [imagePrompt, setImagePrompt] = useState('');
     const [imageStorageId, setImageStorageId] = useState<Id<"_storage"> | null>(null)
     const [imageUrl, setImageUrl] = useState('');
@@ -54,6 +61,9 @@ const CreatePodcast = () => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const createPodcast = useMutation(api.podcasts.createPodcast);
+    const {toast} = useToast();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -62,8 +72,44 @@ const CreatePodcast = () => {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    async function onSubmit(data: z.infer<typeof formSchema>) {
+        try {
+            setIsSubmitting(true);
+            if(!audioUrl || !imageUrl || !voiceType) {
+                toast({
+                    title: "Please generate audio and image",
+                    variant: "destructive"
+                })
+                setIsSubmitting(false)
+                return;
+            }
+
+            const podcast = await createPodcast({
+                podcastTitle: data.podcastTitle,
+                podcastDescription: data.podcastDescription,
+                audioUrl: audioUrl,
+                audioDuration: audioDuration,
+                imageUrl: imageUrl,
+                voiceType: voiceType,   
+                imagePrompt: imagePrompt,
+                voicePrompt: voicePrompt,
+                views: 0,
+                audioStorageId: audioStorageId!,
+                imageStorageId: imageStorageId!
+            })
+            toast({
+                title: "Podcast submitted successfully",
+            })
+            setIsSubmitting(false)
+            router.push('/')
+        } catch (error) {
+            console.log(error)
+            toast({
+                title: "Error submitting podcast",
+                variant: "destructive"
+            })
+            setIsSubmitting(false)
+        }
     }
     return (
         <section className="mt-10 flex flex-col">
