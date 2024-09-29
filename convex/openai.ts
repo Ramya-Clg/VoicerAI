@@ -11,7 +11,6 @@ export const getImageProcessId = action({
     },
     handler: async (_, { prompt }) => {
         const key = process.env.MONSTER_API_KEY;
-        console.log(key);
         const response = await axios.post('https://api.monsterapi.ai/v1/generate/txt2img', {
             safe_filter: true,
             prompt: prompt,
@@ -27,20 +26,23 @@ export const getImageProcessId = action({
 
 
         const data = await response.data;
-        console.log(data);
         const processId = data.process_id;
-        await new Promise(resolve => setTimeout(resolve, 20000));
-
-        const response2 = await axios.get(`https://api.monsterapi.ai/v1/status/${processId}`, {
+        
+        var response2 = await axios.get(`https://api.monsterapi.ai/v1/status/${processId}`, {
             headers: {
                 Authorization: `Bearer ${key} `,
             }
         });
-
-        console.log(response2.data);
-
-
-        console.log(response2.data);
+        
+        console.log(response2.data);    
+        while(response2.data.status != "COMPLETED"){
+            response2 = await axios.get(`https://api.monsterapi.ai/v1/status/${processId}`, {
+                headers: {
+                    Authorization: `Bearer ${key} `,
+                }
+            });
+            await new Promise(resolve => setTimeout(resolve, 3000));
+        }
         const processUrl = response2.data.result.output[0];
 
         return processUrl;

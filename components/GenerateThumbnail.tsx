@@ -57,10 +57,14 @@ const GenerateThumbnail = ({
     }
     const generateImage = async () => {
         try {
-            console.log('generate image');
             const processUrl = await getImageProcessId({ prompt: imagePrompt });
-            console.log(processUrl);
-            setImage(processUrl);
+            const response = await fetch(processUrl)
+            const blob = await response.blob();
+            handleImage(blob, `thumbnail-${uuidv4()}.png`);
+
+
+            // console.log(processUrl);
+            // setImage(processUrl);
             // const blob = new Blob([processUrl], { type: 'image/jpeg' });
             // const fileName = `podcast-${uuidv4()}.mp3`;
             // handleImage(blob, fileName);
