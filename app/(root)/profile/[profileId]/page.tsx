@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable no-unused-vars */
 
 import { useQuery } from "convex/react";
 
@@ -31,7 +32,7 @@ const ProfilePage = ({
             </h1>
             <div className="mt-6 flex flex-col gap-6 max-md:items-center md:flex-row">
                 <ProfileCard
-                // @ts-ignore
+                //@ts-expect-error
                     podcastData={podcastsData!}
                     imageUrl={user?.imageUrl!}
                     userFirstName={user?.name!}
