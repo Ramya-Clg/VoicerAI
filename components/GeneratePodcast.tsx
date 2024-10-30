@@ -30,7 +30,7 @@ const useGeneratePodcast = ({
     const getPodcastAudio = async ({ voice, input }: any) => {
         console.log('Generating podcast audio')
         const key = process.env.NEXT_PUBLIC_VOICERSS_API_KEY
-        const url = `http://api.voicerss.org/?key=${key}&hl=en-us&c=MP3&v=${voice}&src=${input}`
+        const url = `https://api.voicerss.org/?key=${key}&hl=en-us&c=MP3&v=${voice}&src=${input}`
         const response = await axios.get(url, { responseType: 'blob' })
         return response.data;
     };
