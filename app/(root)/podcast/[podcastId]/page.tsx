@@ -31,9 +31,7 @@ const PodcastDetails = ({ params: { podcastId } }: { params: { podcastId: Id<'po
                     <h2 className='text-16 font-bold text-white-1'> {podcast?.views} </h2>
                 </figure>
             </header>
-            //@ts-ignore
-            <PodcastDetailPlayer isOwner = {isOwner} podcastId = {podcast._id} {...podcast}/>
-
+           <PodcastDetailPlayer isOwner = {isOwner} podcastId = {podcast._id} {...podcast}/>
             <p className='text-white-2 text-16 pb-8 pt-[45px] font-medium max-md:text-center'> {podcast?.podcastDescription}</p>
 
             <div className='flex flex-col gap-8'>

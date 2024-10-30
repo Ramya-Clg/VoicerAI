@@ -87,7 +87,7 @@ export interface LatestPodcastCardProps {
 }
 
 export interface PodcastDetailPlayerProps {
-  audioUrl: string;
+  audioUrl?: string | undefined;
   podcastTitle: string;
   author: string;
   isOwner: boolean;

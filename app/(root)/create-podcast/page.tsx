@@ -15,17 +15,14 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import exp from "constants"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import { getEnabledCategories } from "trace_events"
 import { useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import GeneratePodcast from "@/components/GeneratePodcast"
@@ -33,10 +30,8 @@ import GenerateThumbnail from "@/components/GenerateThumbnail"
 import { Loader } from "lucide-react"
 import { Id } from "@/convex/_generated/dataModel"
 import { useToast } from "@/hooks/use-toast"
-import { title } from "process"
 import { useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
-import { create } from "domain"
 import { useRouter } from "next/navigation"
 
 const voiceCategories = ['Linda', 'Amy', 'Mary', 'John', 'Mike']
@@ -84,7 +79,7 @@ const CreatePodcast = () => {
                 return;
             }
 
-            const podcast = await createPodcast({
+            await createPodcast({
                 podcastTitle: data.podcastTitle,
                 podcastDescription: data.podcastDescription,
                 audioUrl: audioUrl,
