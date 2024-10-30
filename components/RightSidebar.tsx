@@ -19,7 +19,7 @@ const RightSidebar = () => {
     const { audio } = useAudio()
     if(!topPodcasters) return <LoaderSpinner/>
     return (
-        <section className={cn('right_sidebar h-[calc(100vh-5px)]', {
+        <section className={cn('right_sidebar h-[calc(100vh-5px), text-white-1]', {
             'h-[calc(100vh-120px)]': audio?.audioUrl
         })}>
             <SignedIn >
@@ -32,7 +32,7 @@ const RightSidebar = () => {
                 {topPodcasters && <Carousel fansLikeDetail={topPodcasters} />}
             </section>
             <section className='flex flex-col gap-8 pt-12'>
-                <Header headerTitle="Top podcasters" />
+                <Header headerTitle="Top podcasters" titleClassName='text-white-1'/>
                 <div className='flex flex-col gap-6'>
                     {topPodcasters?.slice(0, 4).map((item) => (
                         <div key={item._id} className='flex cursor-pointer  justify-between' onClick={() => router.push(`/profile/${item.clerkId}`)}>
@@ -45,7 +45,7 @@ const RightSidebar = () => {
                                 </h2>
                             </figure>
                             < div className='flex items-center'>
-                                <p className='text-12 font-'>
+                                <p className='text-12 text-white-1'>
                                     {item.totalPodcasts} podcasts
                                 </p>
                             </div>

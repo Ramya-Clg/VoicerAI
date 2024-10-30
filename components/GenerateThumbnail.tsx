@@ -64,12 +64,6 @@ const GenerateThumbnail = ({
             const blob = await response.blob();
             handleImage(blob, `thumbnail-${uuidv4()}.png`);
 
-
-            // console.log(processUrl);
-            // setImage(processUrl);
-            // const blob = new Blob([processUrl], { type: 'image/jpeg' });
-            // const fileName = `podcast-${uuidv4()}.mp3`;
-            // handleImage(blob, fileName);
         } catch (error) {
             console.log(error);
             toast({

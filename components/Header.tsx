@@ -14,7 +14,7 @@ const Header = ({ headerTitle, titleClassName }: {
                         {headerTitle}
                     </h1>
                 ) : <div />}
-                <Link href='/discover' className='text-16 font-semibold text-orange-1 '>See All</Link>xxxxx
+                <Link href='/discover' className='text-16 font-semibold text-orange-1 '>See All</Link>
             </header>
         </div>
     )
