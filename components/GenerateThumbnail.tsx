@@ -56,22 +56,25 @@ const GenerateThumbnail = ({
             })
         }
     }
+
     const generateImage = async () => {
         try {
             setIsImageLoading(true);
-            const processUrl = await getImageProcessId({ prompt: imagePrompt });
-            const response = await fetch(processUrl)
-            const blob = await response.blob();
-            handleImage(blob, `thumbnail-${uuidv4()}.png`);
-
+            const processUrl = await getImageProcessId({ prompt: imagePrompt }); // Returns base64 image URL
+            const response = await fetch(processUrl); // Fetch the base64 URL (browser auto-decodes)
+            const blob = await response.blob(); // Convert to Blob
+            handleImage(blob, `thumbnail-${uuidv4()}.png`); // Pass the blob to handleImage
         } catch (error) {
-            console.log(error);
+            console.error("Error generating image:", error);
             toast({
-                title: "error generating image",
-                variant: 'destructive'
-            })
+                title: "Error generating image",
+                variant: "destructive",
+            });
+        } finally {
+            setIsImageLoading(false);
         }
-    }
+    };
+    
     const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         try {

@@ -33,6 +33,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useRouter } from "next/navigation"
+import { VoiceType } from "@/types"
 
 const voiceCategories = ['Linda', 'Amy', 'Mary', 'John', 'Mike']
 
@@ -51,7 +52,7 @@ const CreatePodcast = () => {
     const [audioStorageId, setAudioStorageId] = useState<Id<"_storage"> | null>(null)
     const [audioDuration, setAudioDuration] = useState(0);
 
-    const [voiceType, setVoiceType] = useState<string | null>(null);
+    const [voiceType, setVoiceType] = useState<VoiceType | null>(null);
     const [voicePrompt, setVoicePrompt] = useState('');
 
     const [isSubmitting, setIsSubmitting] = useState(false);
