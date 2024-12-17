@@ -43,3 +43,25 @@ export const getImageProcessId = action({
         }
     },
 });
+
+export const getPodcastAudio = action({
+    args: {
+        voice: v.string(),
+        prompt: v.string(),
+    },
+    handler: async (_, { voice, prompt }) => {
+        try {
+            const url = `https://api.voicerss.org/?key=${process.env.NEXT_PUBLIC_VOICERSS_API_KEY}&hl=en-us&c=MP3&v=${voice}&src=${prompt}`
+            const response = await axios.get(url, { responseType: 'arraybuffer' });
+            const base64Image = btoa(
+                String.fromCharCode(...new Uint8Array(response.data))
+            );
+
+            // Return as a data URL
+            return `data:image/png;base64,${base64Image}`;
+        } catch (error) {
+            console.error("Error generating audio:", error);
+            throw new Error("Failed to generate audio");
+        }
+    },
+});

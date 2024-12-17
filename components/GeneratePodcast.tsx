@@ -27,14 +27,14 @@ const useGeneratePodcast = ({
     const generateUploadUrl = useMutation(api.files.generateUploadUrl)
     const { startUpload } = useUploadFiles(generateUploadUrl)
 
-    const getPodcastAudio = async ({ voice, input }: any) => {
-        console.log('Generating podcast audio')
-        const key = process.env.NEXT_PUBLIC_VOICERSS_API_KEY
-        const url = `https://api.voicerss.org/?key=${key}&hl=en-us&c=MP3&v=${voice}&src=${input}`
-        const response = await axios.get(url, { responseType: 'blob' })
-        return response.data;
-    };
-
+    // const getPodcastAudio = async ({ voice, input }: any) => {
+    //     console.log('Generating podcast audio')
+    //     const key = process.env.NEXT_PUBLIC_VOICERSS_API_KEY
+    //     const url = `https://api.voicerss.org/?key=${key}&hl=en-us&c=MP3&v=${voice}&src=${input}`
+    //     const response = await axios.get(url, { responseType: 'blob' })
+    //     return response.data;
+    // };
+    const getPodcastAudio = useAction(api.openai.getPodcastAudio)
 
 
     const getAudioUrl = useMutation(api.podcasts.getUrl)
@@ -53,10 +53,16 @@ const useGeneratePodcast = ({
         }
 
         try {
-            const blob = await getPodcastAudio({
+            const processUrl = await getPodcastAudio({ 
                 voice: voiceType,
-                input: voicePrompt
-            })
+                prompt: voicePrompt
+             }); // Returns base64 image URL
+            const response = await fetch(processUrl); // Fetch the base64 URL (browser auto-decodes)
+            const blob = await response.blob(); // Convert to Blob
+            // const blob = await getPodcastAudio({
+            //     voice: voiceType,
+            //     input: voicePrompt
+            // })
             const fileName = `podcast-${uuidv4()}.mp3`;
             const file = new File([blob], fileName, { type: 'audio/mpeg' });
             const uploaded = await startUpload([file]);
